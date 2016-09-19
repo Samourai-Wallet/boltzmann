@@ -1,9 +1,7 @@
-Copyright (c) 2014 Laurent Salat
+Copyright (c) 2016 LaurentMT
 
 CREDITS TO
-  Richard Kriss for the pycoin library (https://github.com/richardkiss/pycoin)
-  Vitalik Buterin for the pybitcointools library (https://github.com/vbuterin/pybitcointools)
-  Thomas Voegtlin for electrum (https://github.com/spesmilo/electrum)
+  Antoine Le Calvez for blockchain.info api-v1-client-python (https://github.com/alecalve)
   
 
 MIT License
