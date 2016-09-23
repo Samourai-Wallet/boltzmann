@@ -96,6 +96,7 @@ def usage():
     sys.stdout.write('python ludwig.py [--duration=600] [--cjmaxfeeratio=0] [--options=PRECHECK,LINKABILITY,MERGE_FEES,MERGE_INPUTS,MERGE_OUTPUTS] [--txids=8e56317360a548e8ef28ec475878ef70d1371bee3526c017ac22ad61ae5740b8,812bee538bd24d03af7876a77c989b2c236c063a5803c720769fc55222d36b47,...]');
     sys.stdout.write('\n\n[-t OR --txids] = List of txids to be processed.')
     sys.stdout.write('\n\n[-d OR --duration] = Maximum number of seconds allocated to the processing of a single transaction. Default value is 600')
+    sys.stdout.write('\n\n[-r OR --cjmaxfeeratio] = Max intrafees paid by the taker of a coinjoined transaction. Expressed as a percentage of the coinjoined amount. Default value is 0.')
     
     sys.stdout.write('\n\n[-o OR --options] = Options to be applied during processing. Default value is PRECHECK, LINKABILITY, MERGE_INPUTS')
     sys.stdout.write('\n    Available options are :')    
@@ -111,6 +112,7 @@ if __name__ == '__main__':
     # Initializes parameters
     txids = []
     max_duration = 600
+    max_cj_intrafees_ratio = 0 # 0.005
     options = ['PRECHECK', 'LINKABILITY', 'MERGE_INPUTS']
     argv = sys.argv[1:]
     # Processes arguments
