@@ -167,8 +167,7 @@ class TxosLinker(object):
             nb_cmbn, mat_lnk = self._compute_link_matrix()
         
         # Unpacks the matrix
-        if self._packs and mat_lnk is not None:
-            mat_lnk = self._unpack_link_matrix(mat_lnk, nb_cmbn)
+        mat_lnk = self._unpack_link_matrix(mat_lnk, nb_cmbn)
         
         # Returns results
         return mat_lnk, nb_cmbn, self.inputs, self.outputs
@@ -540,26 +539,28 @@ class TxosLinker(object):
             if lctn == 'INPUTS':
                 key = (pack, val)
                 idx = self.inputs.index(key)
-                nb_ins = len(ins)
-                nb_outs = len(self.outputs)
-                # Inserts columns into the matrix for packed inputs
-                shape = (nb_outs, nb_ins)
-                vals = np.zeros(shape , dtype=np.int64)
-                vals += mat_res[:,idx][:, np.newaxis]
-                mat_res = np.hstack( (mat_res[:,0:idx], vals, mat_res[:,idx+1:]) )
+                if mat_lnk is not None:
+                    nb_ins = len(ins)
+                    nb_outs = len(self.outputs)
+                    # Inserts columns into the matrix for packed inputs
+                    shape = (nb_outs, nb_ins)
+                    vals = np.zeros(shape , dtype=np.int64)
+                    vals += mat_res[:,idx][:, np.newaxis]
+                    mat_res = np.hstack( (mat_res[:,0:idx], vals, mat_res[:,idx+1:]) )
                 # Inserts unpacked inputs into the list of inputs
                 self.inputs[idx:idx+1] = ins
                   
             elif lctn == 'OUTPUTS':
                 key = (pack, val)
                 idx = self.outputs.index(key)
-                nb_ins = len(self.inputs)
-                nb_outs = len(outs)
-                # Inserts rows into the matrix for packed outputs
-                shape = (nb_outs, nb_ins)
-                vals = np.zeros(shape, dtype=np.int64)
-                vals += mat_res[idx,:][np.newaxis,:]
-                mat_res = np.vstack( (mat_res[0:idx,:], vals, mat_res[idx+1:,:]) )
+                if mat_lnk is not None:
+                    nb_ins = len(self.inputs)
+                    nb_outs = len(outs)
+                    # Inserts rows into the matrix for packed outputs
+                    shape = (nb_outs, nb_ins)
+                    vals = np.zeros(shape, dtype=np.int64)
+                    vals += mat_res[idx,:][np.newaxis,:]
+                    mat_res = np.vstack( (mat_res[0:idx,:], vals, mat_res[idx+1:,:]) )
                 # Inserts unpacked outputs into the list of outputs
                 self.outputs[idx:idx+1] = outs
                 
