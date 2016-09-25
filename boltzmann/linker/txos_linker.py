@@ -32,10 +32,7 @@ class TxosLinker(object):
     PACK = 'PACK'
     
     # Max number of inputs (or outputs) which can be processed by this algorithm
-    # PRECHECK MODE
-    MAX_NB_TXOS_PRECHECK_MODE = 12
-    # LINKABILITY MODE
-    MAX_NB_TXOS_LINKABILTY_MODE = 12
+    MAX_NB_TXOS = 12
     
     
         
@@ -68,18 +65,21 @@ class TxosLinker(object):
     '''
     INITIALIZATION
     '''
-    def __init__(self, inputs=[], outputs=[], fees=0, max_duration=MAX_DURATION):
+    def __init__(self, inputs=[], outputs=[], fees=0, max_duration=MAX_DURATION, max_txos=MAX_NB_TXOS):
         '''
         Constructor
         Parameters:
-            inputs  = list of inputs txos [(v1_id, v1_amount), ...]
-            outputs = list of outputs txos [(v1_id, v1_amount), ...]
-            fees    = amount of fees associated to the transaction
+            inputs       = list of inputs txos [(v1_id, v1_amount), ...]
+            outputs      = list of outputs txos [(v1_id, v1_amount), ...]
+            fees         = amount of fees associated to the transaction
+            max_duration = max duration allocated to processing of a single tx (in seconds)
+            max_txos     = max number of txos. Txs with more than max_txos inputs or outputs are not processed.
         '''
         self._orig_ins = inputs
         self._orig_outs = outputs
         self._orig_fees = fees
-        self._max_duration = max_duration        
+        self._max_duration = max_duration
+        self.max_txos = max_txos        
         self._packs = []
                         
     
@@ -574,11 +574,5 @@ class TxosLinker(object):
         len_in = len(self.inputs)
         len_out = len(self.outputs)
         max_card = max(len_in, len_out)
-        
-        if (mode == self.LINKABILITY) and max_card <= self.MAX_NB_TXOS_LINKABILTY_MODE:
-            return True
-        elif (mode == self.PRECHECK) and max_card <= self.MAX_NB_TXOS_PRECHECK_MODE:
-            return True
-        else:
-            return False
+        return True if (max_card <= self.max_txos) else False
     

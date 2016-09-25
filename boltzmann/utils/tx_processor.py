@@ -10,13 +10,14 @@ from boltzmann.linker.txos_linker import TxosLinker
 from boltzmann.utils.lists import merge_sets
 
 
-def process_tx(tx, options, max_duration, max_cj_intrafees_ratio=0):
+def process_tx(tx, options, max_duration, max_txos, max_cj_intrafees_ratio=0):
     '''
     Processes a transaction
     Parameters:
         tx                      = Transaction to be processed (@see boltzmann.utils.transaction.Transaction)
         options                 = options to be applied during processing
         max_duration            = max duration allocated to processing of a single tx (in seconds)
+        max_txos                = max number of txos. Txs with more than max_txos inputs or outputs are not processed.
         max_cj_intrafees_ratio  = max intrafees paid by the taker of a coinjoined transaction. 
                                   Expressed as a percentage of the coinjoined amount.
     '''
@@ -48,7 +49,7 @@ def process_tx(tx, options, max_duration, max_cj_intrafees_ratio=0):
     else:
         
         # Initializes the TxosLinker for this tx
-        linker = TxosLinker(filtered_ins, filtered_outs, fees, max_duration)
+        linker = TxosLinker(filtered_ins, filtered_outs, fees, max_duration, max_txos)
         
         # Computes a list of sets of inputs controlled by a same address
         linked_ins = get_linked_txos(filtered_ins, map_ins) if ('MERGE_INPUTS' in options) else []

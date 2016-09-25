@@ -59,13 +59,14 @@ def display_results(mat_lnk, nb_cmbn, inputs, outputs, fees, intrafees):
 
 
 
-def main(txids, options=['PRECHECK', 'LINKABILITY', 'MERGE_INPUTS'], max_duration=600, max_cj_intrafees_ratio=0):
+def main(txids, options=['PRECHECK', 'LINKABILITY', 'MERGE_INPUTS'], max_duration=600, max_txos=12, max_cj_intrafees_ratio=0):
     '''
     Main function
     Parameters:
         txids                   = list of transactions txids to be processed
         options                 = options to be applied during processing
         max_duration            = max duration allocated to processing of a single tx (in seconds)
+        max_txos                = max number of txos. Txs with more than max_txos inputs or outputs are not processed.
         max_cj_intrafees_ratio  = max intrafees paid by the taker of a coinjoined transaction. 
                                   Expressed as a percentage of the coinjoined amount.
     '''
@@ -82,7 +83,7 @@ def main(txids, options=['PRECHECK', 'LINKABILITY', 'MERGE_INPUTS'], max_duratio
             continue
         
         # Computes the entropy of the tx and the linkability of txos
-        (mat_lnk, nb_cmbn, inputs, outputs, fees, intrafees) = process_tx(tx, options, max_duration,  max_cj_intrafees_ratio)
+        (mat_lnk, nb_cmbn, inputs, outputs, fees, intrafees) = process_tx(tx, options, max_duration, max_txos, max_cj_intrafees_ratio)
         
         # Displays the results
         display_results(mat_lnk, nb_cmbn, inputs, outputs, fees, intrafees)
@@ -93,9 +94,10 @@ def usage():
     '''
     Usage message for this module
     '''
-    sys.stdout.write('python ludwig.py [--duration=600] [--cjmaxfeeratio=0] [--options=PRECHECK,LINKABILITY,MERGE_FEES,MERGE_INPUTS,MERGE_OUTPUTS] [--txids=8e56317360a548e8ef28ec475878ef70d1371bee3526c017ac22ad61ae5740b8,812bee538bd24d03af7876a77c989b2c236c063a5803c720769fc55222d36b47,...]');
+    sys.stdout.write('python ludwig.py [--duration=600] [--maxnbtxos=12] [--cjmaxfeeratio=0] [--options=PRECHECK,LINKABILITY,MERGE_FEES,MERGE_INPUTS,MERGE_OUTPUTS] [--txids=8e56317360a548e8ef28ec475878ef70d1371bee3526c017ac22ad61ae5740b8,812bee538bd24d03af7876a77c989b2c236c063a5803c720769fc55222d36b47,...]');
     sys.stdout.write('\n\n[-t OR --txids] = List of txids to be processed.')
     sys.stdout.write('\n\n[-d OR --duration] = Maximum number of seconds allocated to the processing of a single transaction. Default value is 600')
+    sys.stdout.write('\n\n[-x OR --maxnbtxos] = Maximum number of inputs or ouputs. Transactions with more than maxnbtxos inputs or outputs are not processed. Default value is 12.')
     sys.stdout.write('\n\n[-r OR --cjmaxfeeratio] = Max intrafees paid by the taker of a coinjoined transaction. Expressed as a percentage of the coinjoined amount. Default value is 0.')
     
     sys.stdout.write('\n\n[-o OR --options] = Options to be applied during processing. Default value is PRECHECK, LINKABILITY, MERGE_INPUTS')
@@ -111,13 +113,14 @@ def usage():
 if __name__ == '__main__':
     # Initializes parameters
     txids = []
+    max_txos = 12
     max_duration = 600
-    max_cj_intrafees_ratio = 0 # 0.005
+    max_cj_intrafees_ratio = 0 #0.005
     options = ['PRECHECK', 'LINKABILITY', 'MERGE_INPUTS']
     argv = sys.argv[1:]
     # Processes arguments
     try:                                
-        opts, args = getopt.getopt(argv, 'ht:d:o:r:', ['help', 'txids=', 'duration=', 'options=', 'cjmaxfeeratio='])
+        opts, args = getopt.getopt(argv, 'ht:d:o:r:x:', ['help', 'txids=', 'duration=', 'options=', 'cjmaxfeeratio=', 'maxnbtxos='])
     except getopt.GetoptError:          
         usage()                         
         sys.exit(2)                     
@@ -127,12 +130,14 @@ if __name__ == '__main__':
             sys.exit()
         elif opt in ('-d', '--duration'):
             max_duration = int(arg)
+        elif opt in ('-x', '--maxnbtxos'):
+            max_txos = int(arg)
         elif opt in ('-r', '--cjmaxfeeratio'):
-            max_cj_intrafees_ratio = int(arg)
+            max_cj_intrafees_ratio = float(arg)
         elif opt in ('-t', '--txids'):
             txids = [t.strip() for t in arg.split(',')]
         elif opt in ('-o', '--options'):
             options = [t.strip() for t in arg.split(',')]
     # Processes computations
-    main(txids, options, max_duration, max_cj_intrafees_ratio)
+    main(txids, options, max_duration, max_txos, max_cj_intrafees_ratio)  
     
