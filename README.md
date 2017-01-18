@@ -58,12 +58,17 @@ python ludwig.py [--duration=600] [--maxnbtxos=12] [--cjmaxfeeratio=0] [--option
 
 [-o OR --options] = Options to be applied during processing. 
                     Default value is PRECHECK, LINKABILITY, MERGE_INPUTS.
-                    Available options are :  
-                      PRECHECK = Checks if deterministic links exist without processing the entropy of the transaction. Similar to Coinjoin Sudoku by K.Atlas.
-                      LINKABILITY = Computes the entropy of the transaction and the txos linkability matrix.
-                      MERGE_INPUTS = Merges inputs "controlled" by a same address. Speeds up computations.
-                      MERGE_OUTPUTS = Merges outputs "controlled" by a same address. Speeds up computations but this option is not recommended.
-                      MERGE_FEES = Processes fees as an additional output paid by a single participant. May speed up computations.
+                    Available options are :
+                    
+- PRECHECK = Checks if deterministic links exist without processing the entropy of the transaction. Similar to Coinjoin Sudoku by K.Atlas.
+                      
+- LINKABILITY = Computes the entropy of the transaction and the txos linkability matrix.
+                      
+- MERGE_INPUTS = Merges inputs "controlled" by a same address. Speeds up computations.
+                      
+- MERGE_OUTPUTS = Merges outputs "controlled" by a same address. Speeds up computations but this option is not recommended.
+                      
+- MERGE_FEES = Processes fees as an additional output paid by a single participant. May speed up computations.
 
 
 ## Author
