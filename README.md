@@ -71,6 +71,11 @@ python ludwig.py [--duration=600] [--maxnbtxos=12] [--cjmaxfeeratio=0] [--option
 - MERGE_FEES = Processes fees as an additional output paid by a single participant. May speed up computations.
 
 
+## Notes
+
+Boltzmann is provided with a wrapper querying blockchain.info api in order to retrieve data related to transactions. Anyway, it remains possible to develop additional wrappers querying others data sources (e.g. a local bitcoin node, etc)
+
+
 ## Author
 Twitter: @LaurentMT
 
