@@ -223,7 +223,7 @@ class TxosLinker(object):
         for j in range(0, expnt):
             two_exp_j = 2**j
             tmp = np.repeat(base, two_exp_j)
-            all_agg[j, :] = np.tile(tmp, 2**(expnt-1) / two_exp_j)
+            all_agg[j, :] = np.tile(tmp, int(2**(expnt-1) / two_exp_j))
         #all_agg = np.arange(2**expnt) >> np.arange(expnt)[::, np.newaxis] & 1
 
         # Computes values of aggregates
