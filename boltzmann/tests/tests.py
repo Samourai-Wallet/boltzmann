@@ -96,6 +96,24 @@ def build_test_vectors():
     outputs = [ ('A', 5), ('B', 5), ('C', 5), ('D', 5), ('E', 5) ]
     test_vectors.append((name, inputs, outputs, options))
     
+    # Test case P6 
+    name = 'TEST P6'
+    inputs  = [ ('a', 5), ('b', 5), ('c', 5), ('d', 5), ('e', 5), ('f', 5) ]
+    outputs = [ ('A', 5), ('B', 5), ('C', 5), ('D', 5), ('E', 5), ('F', 5) ]
+    test_vectors.append((name, inputs, outputs, options))
+    
+    # Test case P7 
+    name = 'TEST P7'
+    inputs  = [ ('a', 5), ('b', 5), ('c', 5), ('d', 5), ('e', 5), ('f', 5), ('g', 5) ]
+    outputs = [ ('A', 5), ('B', 5), ('C', 5), ('D', 5), ('E', 5), ('F', 5), ('G', 5) ]
+    test_vectors.append((name, inputs, outputs, options))
+    
+    # Test case P8 
+    name = 'TEST P8'
+    inputs  = [ ('a', 5), ('b', 5), ('c', 5), ('d', 5), ('e', 5), ('f', 5), ('g', 5), ('h', 5) ]
+    outputs = [ ('A', 5), ('B', 5), ('C', 5), ('D', 5), ('E', 5), ('F', 5), ('G', 5), ('H', 5) ]
+    test_vectors.append((name, inputs, outputs, options))
+    
     # Test case P9 
     name = 'TEST P9'
     inputs  = [ ('a', 5), ('b', 5), ('c', 5), ('d', 5), ('e', 5), ('f', 5), ('g', 5), ('h', 5), ('i', 5) ]
