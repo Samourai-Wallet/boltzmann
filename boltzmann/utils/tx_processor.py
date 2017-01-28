@@ -43,8 +43,8 @@ def process_tx(tx, options, max_duration, max_txos, max_cj_intrafees_ratio=0):
         # No need to build this matrix. Every caller should be able to manage that.
         mat_lnk = None
         nb_cmbn = 1
-        txo_ins = post_process_txos(filtered_ins, map_ins)
-        txo_outs = post_process_txos(filtered_outs, map_outs)
+        txo_ins = filtered_ins
+        txo_outs = filtered_outs
     
     else:
         
