@@ -13,7 +13,8 @@ class Txo(object):
         if txo is not None:
             self.n = txo['n']
             self.value = txo['value']
-            self.address = txo['addr']
+            # Gets the address or the scriptpubkey (if an address isn't associated to the txo)
+            self.address = txo['addr'] if ('addr' in txo) else txo['script']
             self.tx_idx = txo['tx_index']
             
 
