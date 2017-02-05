@@ -68,7 +68,7 @@ python ludwig.py [--duration=600] [--maxnbtxos=12] [--cjmaxfeeratio=0] [--option
 
 ## Notes
 
-Boltzmann is provided with a wrapper querying blockchain.info api in order to retrieve data related to transactions. Anyway, it remains possible to develop additional wrappers querying others data sources (e.g. a local bitcoin node, etc).
+Boltzmann is provided with a wrapper querying blockchain.info api in order to retrieve data related to transactions. Anyway, it remains possible to develop additional wrappers querying others data sources. A wrapper for bitcoind rpc api is in the pipe.
 
 
 ## Contributors
