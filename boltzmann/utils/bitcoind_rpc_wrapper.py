@@ -191,18 +191,23 @@ class BitcoindRPCWrapper(BlockchainDataWrapper):
                 * 'value' (int)
         """
         bci_input = dict()
-        bci_input['prev_out'] = dict()
-        bci_input['prev_out']['tx_index'] = None
-        prev_txid = rpc_input['txid']
-        prev_vout_num = rpc_input['vout'] #RPC field is ambiguously named :/
-        bci_input['prev_out']['n'] = prev_vout_num
 
-        prev_tx = self._get_decoded_tx(prev_txid)
-        bci_input['prev_out']['addr'] = self._get_output_address(
-            prev_txid, prev_vout_num, prev_tx)
-        bci_input['prev_out']['script'] = prev_tx['vout'][prev_vout_num]['scriptPubKey']['hex']
-        float_val = prev_tx['vout'][prev_vout_num]['value']
-        bci_input['prev_out']['value'] = _float_to_satoshi(float_val)
+        #do not create prev_out field if this input is part of a coinbase
+        #  transaction. This is consistent with the BCI JSON format.
+        if 'txid' in rpc_input:
+            bci_input['prev_out'] = dict()
+            bci_input['prev_out']['tx_index'] = None
+            prev_txid = rpc_input['txid']
+            prev_vout_num = rpc_input['vout'] #RPC field is ambiguously named :/
+            bci_input['prev_out']['n'] = prev_vout_num
+
+            prev_tx = self._get_decoded_tx(prev_txid)
+            bci_input['prev_out']['addr'] = self._get_output_address(
+                prev_txid, prev_vout_num, prev_tx)
+            bci_input['prev_out']['script'] = (prev_tx['vout'][prev_vout_num]
+                                               ['scriptPubKey']['hex'])
+            float_val = prev_tx['vout'][prev_vout_num]['value']
+            bci_input['prev_out']['value'] = _float_to_satoshi(float_val)
         return bci_input
 
 

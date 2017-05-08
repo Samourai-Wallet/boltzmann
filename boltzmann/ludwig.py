@@ -5,8 +5,9 @@ Created on 20160917
 import os
 import math
 import getopt
-
+import traceback
 import sys
+
 # Adds boltzmann directory into path
 sys.path.append(os.path.dirname(os.path.realpath(__file__)) + "/../")
 
@@ -80,7 +81,7 @@ def main(txids, rpc, options=['PRECHECK', 'LINKABILITY', 'MERGE_INPUTS'], max_du
         provider_descriptor = 'local RPC interface'
     else:
         blockchain_provider = BlockchainInfoWrapper()
-        provider_descriptor = 'remove blockchain.info API'
+        provider_descriptor = 'remote blockchain.info API'
 
     print("DEBUG: Using %s" % provider_descriptor)
 
@@ -91,7 +92,7 @@ def main(txids, rpc, options=['PRECHECK', 'LINKABILITY', 'MERGE_INPUTS'], max_du
             tx = blockchain_provider.get_tx(txid)
             print("DEBUG: Tx fetched: {0}".format(str(tx)))
         except Exception as err:
-            print('Unable to retrieve information for %s from %s: %s' % (txid, provider_descriptor, err))
+            print('Unable to retrieve information for %s from %s: %s %s' % (txid, provider_descriptor, err, traceback.format_exc()))
             continue
 
         # Computes the entropy of the tx and the linkability of txos

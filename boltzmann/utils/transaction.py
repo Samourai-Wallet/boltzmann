@@ -17,13 +17,29 @@ class Txo(object):
         tx_idx (int): A special identifier assigned to each mined transaction
             by the Blockchain.info API. Set to `None` if not available. not
             currently read in this project.
+        
+        Note that coinbase transactions in the bitcoind-rpc interface and BCI API
+        only contain the 'sequence' and 'script'/'coinbase' fields.
     '''
     def __init__(self, txo):
+        self.n = -1
+        self.value = -1
+        self.address = ''
+        self.tx_idx = -1
+
         if txo is not None:
-            self.n = txo['n']
-            self.value = txo['value']
+            if 'n in txo':
+                self.n = txo['n']
+            if 'value' in txo:
+                self.value = txo['value']
             # Gets the address or the scriptpubkey (if an address isn't associated to the txo)
-            self.address = txo['addr'] if ('addr' in txo) else txo['script']
+            if 'addr' in txo:
+                self.address = txo['addr'] 
+            elif 'script' in txo:
+                self.address = txo['script']
+            else:
+                raise ValueError("Could not assign address to txo")
+
             self.tx_idx = txo['tx_index']
 
     def __str__(self):
