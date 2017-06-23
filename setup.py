@@ -28,6 +28,8 @@ setup(
     install_requires=[
         'numpy >= 1.8.0',
         'sortedcontainers',
-        'python-bitcoinrpc'
+        'python-bitcoinrpc',
+        'mpmath',
+        'sympy'
     ]
 )

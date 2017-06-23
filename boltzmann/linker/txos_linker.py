@@ -8,6 +8,7 @@ from datetime import datetime
 from collections import deque, defaultdict
 from sortedcontainers.sortedlist import SortedList
 from boltzmann.utils.lists import merge_sets
+import sys
 
 
 class TxosLinker(object):
@@ -302,7 +303,6 @@ class TxosLinker(object):
                 for j in range(0, j_max):
                     if (i & j == 0) and (j in saggs):
                         mat[i+j].append( (i,j) )
-
         self._mat_in_agg_cmbn = mat
 
 
