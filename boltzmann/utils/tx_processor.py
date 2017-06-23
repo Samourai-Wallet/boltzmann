@@ -206,7 +206,7 @@ def compute_coinjoin_intrafees(nb_ptcpts, cj_amount, prct_max):
 
 
 '''
-Computation of coinjoin efficiency
+Computation of wallet efficiency
 (@see https://gist.github.com/LaurentMT/e758767ca4038ac40aaf)
 '''
 def compute_wallet_efficiency(nb_ins, nb_outs, nb_cmbn=1):
@@ -250,9 +250,6 @@ def get_closest_perfect_coinjoin(nb_ins, nb_outs):
         nb_ins  = number of inputs of the transaction
         nb_outs = number of outputs of the transaction
     '''
-    if nb_ins == nb_outs:
-        return (nb_ins, nb_outs)
-
     if nb_ins > nb_outs:
         # Reverses inputs and outputs
         tmp_outs = nb_outs
