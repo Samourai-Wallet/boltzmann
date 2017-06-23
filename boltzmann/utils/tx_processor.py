@@ -236,10 +236,10 @@ def get_closest_perfect_coinjoin(nb_ins, nb_outs):
     Computes the structure of the closest perfect coinjoin
     for a transaction defined by its #inputs and #outputs
 
-    A perfect coinjoin is defined as a transaction with:
+    A perfect coinjoin is defined as a transaction for which:
       - all inputs have the same amount
       - all outputs have the same amount
-      - 0 fee paid (equiv. to same fee paid by each input)
+      - 0 fee are paid (equiv. to same fee paid by each input)
       - nb_i % nb_o == 0, if nb_i >= nb_o
         or
         nb_o % nb_i == 0, if nb_o >= nb_i
@@ -271,10 +271,10 @@ def compute_cmbns_perfect_cj(nb_i, nb_o):
     Computes the number of combinations
     for a perfect coinjoin with nb_i inputs and nb_o outputs.
 
-    A perfect coinjoin is defined as a transaction with:
+    A perfect coinjoin is defined as a transaction for which:
       - all inputs have the same amount
       - all outputs have the same amount
-      - 0 fee paid (equiv. to same fee paid by each input)
+      - 0 fee are paid (equiv. to same fee paid by each input)
       - nb_i % nb_o == 0, if nb_i >= nb_o
         or
         nb_o % nb_i == 0, if nb_o >= nb_i
