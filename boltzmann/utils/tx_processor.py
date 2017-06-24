@@ -209,7 +209,7 @@ def compute_coinjoin_intrafees(nb_ptcpts, cj_amount, prct_max):
 Computation of wallet efficiency
 (@see https://gist.github.com/LaurentMT/e758767ca4038ac40aaf)
 '''
-def compute_wallet_efficiency(nb_ins, nb_outs, nb_cmbn=1):
+def compute_wallet_efficiency(nb_i, nb_o, nb_cmbn=1):
     '''
     Computes the efficiency of a transaction defined by:
     - its number of inputs
@@ -219,19 +219,19 @@ def compute_wallet_efficiency(nb_ins, nb_outs, nb_cmbn=1):
     Returns an efficiency score computed as the ratio: nb_cmbn / nb_cmbn_closest_perfect_coinjoin
 
     Parameters:
-        nb_ins  = number of inputs
-        nb_outs = number of outputs
+        nb_i    = number of inputs
+        nb_o    = number of outputs
         nb_cmbn = number of combinations found for the transaction
     '''
     if nb_cmbn == 1:
         return 0
     else:
-        (tgt_nb_ins, tgt_nb_outs) = get_closest_perfect_coinjoin(nb_ins, nb_outs)
-        nb_cmbn_prfct_cj = compute_cmbns_perfect_cj(tgt_nb_ins, tgt_nb_outs)
+        (tgt_nb_i, tgt_nb_o) = get_closest_perfect_coinjoin(nb_i, nb_o)
+        nb_cmbn_prfct_cj = compute_cmbns_perfect_cj(tgt_nb_i, tgt_nb_o)
         return None if nb_cmbn_prfct_cj is None else float(nb_cmbn) / nb_cmbn_prfct_cj
 
 
-def get_closest_perfect_coinjoin(nb_ins, nb_outs):
+def get_closest_perfect_coinjoin(nb_i, nb_o):
     '''
     Computes the structure of the closest perfect coinjoin
     for a transaction defined by its #inputs and #outputs
@@ -244,23 +244,21 @@ def get_closest_perfect_coinjoin(nb_ins, nb_outs):
         or
         nb_o % nb_i == 0, if nb_o >= nb_i
 
-    Returns a tuple (nb_ins, nb_outs) for the closest perfect coinjoin
+    Returns a tuple (nb_i, nb_o) for the closest perfect coinjoin
 
     Parameters:
-        nb_ins  = number of inputs of the transaction
-        nb_outs = number of outputs of the transaction
+        nb_i = number of inputs of the transaction
+        nb_o = number of outputs of the transaction
     '''
-    if nb_ins > nb_outs:
+    if nb_i > nb_o:
         # Reverses inputs and outputs
-        tmp_outs = nb_outs
-        nb_outs = nb_ins
-        nb_ins = tmp_outs
+        nb_i, nb_o = nb_o, nb_i
 
-    if nb_outs % nb_ins == 0:
-        return (nb_ins, nb_outs)
+    if nb_o % nb_i == 0:
+        return (nb_i, nb_o)
     else:
-        tgt_ratio = 1 + int(nb_outs / nb_ins)
-        return (nb_ins, nb_ins * tgt_ratio)
+        tgt_ratio = 1 + int(nb_o / nb_i)
+        return (nb_i, nb_i * tgt_ratio)
 
 
 def compute_cmbns_perfect_cj(nb_i, nb_o):
@@ -293,12 +291,10 @@ def compute_cmbns_perfect_cj(nb_i, nb_o):
     # Reverses inputs & outputs if nb_i > nb_o
     # (required for the use of EBP)
     if nb_i > nb_o:
-        buff_nb_o = nb_o
-        nb_o = nb_i
-        nb_i = buff_nb_o
+        nb_i, nb_o = nb_o, nb_i
 
     # Checks structure of perfect coinjoin tx
-    # (we have an integer ratio between nb_i and nb_o)
+    # (we must have an integer ratio between nb_o and nb_i)
     if nb_o % nb_i != 0:
         return None
 
@@ -322,7 +318,7 @@ def compute_cmbns_perfect_cj(nb_i, nb_o):
         dict_coeffs = parts_k_i.as_coefficients_dict()
 
         for monomial, coef_monomial in dict_coeffs.items():
-            nb_cmbns_monomial = coef_monomial
+            nb_cmbn_monomial = coef_monomial
 
             # Splits the monomial in its basic blocks
             # and extracts the exponent for each block
@@ -336,9 +332,9 @@ def compute_cmbns_perfect_cj(nb_i, nb_o):
                 block_nb_i = int(str(block)[1:])
                 block_nb_o = int(ratio_o_i * block_nb_i)
                 for _ in range(1, block_exp+1):
-                    nb_cmbns_monomial *= nC(symbols('x:%d' % nb_free_o), block_nb_o)
+                    nb_cmbn_monomial *= nC(symbols('x:%d' % nb_free_o), block_nb_o)
                     nb_free_o -= block_nb_o
 
-            nb_cmbn += nb_cmbns_monomial
+            nb_cmbn += nb_cmbn_monomial
 
     return nb_cmbn
