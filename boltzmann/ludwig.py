@@ -41,7 +41,7 @@ def display_results(mat_lnk, nb_cmbn, inputs, outputs, fees, intrafees, efficien
     if nb_cmbn > 0:
         print('Tx entropy = %f bits' % math.log2(nb_cmbn))
     
-    if efficiency is not None:
+    if efficiency is not None and efficiency > 0:
         print('Wallet efficiency = %f%% (%f bits)' % (efficiency*100, math.log2(efficiency)))
 
     if mat_lnk is None:
@@ -159,3 +159,4 @@ if __name__ == '__main__':
             options = [t.strip() for t in arg.split(',')]
     # Processes computations
     main(txids=txids, rpc=rpc, options=options, max_duration=max_duration, max_txos=max_txos, max_cj_intrafees_ratio=max_cj_intrafees_ratio)
+    
