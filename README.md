@@ -44,6 +44,8 @@ python ludwig.py [--rpc] [--duration=600] [--maxnbtxos=12] [--cjmaxfeeratio=0] [
 
 [-p OR --rpc] = Use bitcoind's RPC interface as source of blockchain data
 
+[-T OR --testnet] = Use Smartbit testnet3 as source of blockchain data
+
 [-d OR --duration] = Maximum number of seconds allocated to the processing of a single transaction.
                      Default value is 600 seconds.
 
@@ -99,7 +101,7 @@ txindex=1
 ## Contributors
 @LaurentMT 
 @kristovatlas
-
+@SamouraiDev
 
 ## Contributing
 

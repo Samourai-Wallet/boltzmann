@@ -14,6 +14,7 @@ sys.path.append(os.path.dirname(os.path.realpath(__file__)) + "/../")
 from boltzmann.utils.tx_processor import process_tx
 from boltzmann.utils.bitcoind_rpc_wrapper import BitcoindRPCWrapper
 from boltzmann.utils.bci_wrapper import BlockchainInfoWrapper
+from boltzmann.utils.smartbit_testnet_wrapper import SmartbitTestNetWrapper
 
 
 
@@ -62,7 +63,7 @@ def display_results(mat_lnk, nb_cmbn, inputs, outputs, fees, intrafees):
 
 
 
-def main(txids, rpc, options=['PRECHECK', 'LINKABILITY', 'MERGE_INPUTS'], max_duration=600, max_txos=12, max_cj_intrafees_ratio=0):
+def main(txids, rpc, testnet, options=['PRECHECK', 'LINKABILITY', 'MERGE_INPUTS'], max_duration=600, max_txos=12, max_cj_intrafees_ratio=0):
     '''
     Main function
     Parameters:
@@ -79,6 +80,9 @@ def main(txids, rpc, options=['PRECHECK', 'LINKABILITY', 'MERGE_INPUTS'], max_du
     if rpc:
         blockchain_provider = BitcoindRPCWrapper()
         provider_descriptor = 'local RPC interface'
+    elif testnet:
+        blockchain_provider = SmartbitTestNetWrapper()
+        provider_descriptor = 'remote Smartbit testnet API'
     else:
         blockchain_provider = BlockchainInfoWrapper()
         provider_descriptor = 'remote blockchain.info API'
@@ -107,9 +111,10 @@ def usage():
     '''
     Usage message for this module
     '''
-    sys.stdout.write('python ludwig.py [--rpc] [--duration=600] [--maxnbtxos=12] [--cjmaxfeeratio=0] [--options=PRECHECK,LINKABILITY,MERGE_FEES,MERGE_INPUTS,MERGE_OUTPUTS] [--txids=8e56317360a548e8ef28ec475878ef70d1371bee3526c017ac22ad61ae5740b8,812bee538bd24d03af7876a77c989b2c236c063a5803c720769fc55222d36b47,...]');
+    sys.stdout.write('python ludwig.py [--rpc] [--testnet] [--duration=600] [--maxnbtxos=12] [--cjmaxfeeratio=0] [--options=PRECHECK,LINKABILITY,MERGE_FEES,MERGE_INPUTS,MERGE_OUTPUTS] [--txids=8e56317360a548e8ef28ec475878ef70d1371bee3526c017ac22ad61ae5740b8,812bee538bd24d03af7876a77c989b2c236c063a5803c720769fc55222d36b47,...]');
     sys.stdout.write('\n\n[-t OR --txids] = List of txids to be processed.')
     sys.stdout.write('\n\n[-p OR --rpc] = Use bitcoind\'s RPC interface as source of blockchain data')
+    sys.stdout.write('\n\n[-T OR --testnet] = Use Smartbit testnet interface as source of blockchain data')
     sys.stdout.write('\n\n[-d OR --duration] = Maximum number of seconds allocated to the processing of a single transaction. Default value is 600')
     sys.stdout.write('\n\n[-x OR --maxnbtxos] = Maximum number of inputs or ouputs. Transactions with more than maxnbtxos inputs or outputs are not processed. Default value is 12.')
     sys.stdout.write('\n\n[-r OR --cjmaxfeeratio] = Max intrafees paid by the taker of a coinjoined transaction. Expressed as a percentage of the coinjoined amount. Default value is 0.')
@@ -134,17 +139,20 @@ if __name__ == '__main__':
     argv = sys.argv[1:]
     # Processes arguments
     try:
-        opts, args = getopt.getopt(argv, 'hpt:p:d:o:r:x:', ['help', 'rpc', 'txids=', 'duration=', 'options=', 'cjmaxfeeratio=', 'maxnbtxos='])
+        opts, args = getopt.getopt(argv, 'hpt:p:d:o:r:x:T:', ['help', 'rpc', 'testnet', 'txids=', 'duration=', 'options=', 'cjmaxfeeratio=', 'maxnbtxos='])
     except getopt.GetoptError:
         usage()
         sys.exit(2)
     rpc = False
+    testnet = False
     for opt, arg in opts:
         if opt in ('-h', '--help'):
             usage()
             sys.exit()
         elif opt in ('-p', '--rpc'):
             rpc = True
+        elif opt in ('-T', '--testnet'):
+            testnet = True
         elif opt in ('-d', '--duration'):
             max_duration = int(arg)
         elif opt in ('-x', '--maxnbtxos'):
@@ -156,4 +164,4 @@ if __name__ == '__main__':
         elif opt in ('-o', '--options'):
             options = [t.strip() for t in arg.split(',')]
     # Processes computations
-    main(txids=txids, rpc=rpc, options=options, max_duration=max_duration, max_txos=max_txos, max_cj_intrafees_ratio=max_cj_intrafees_ratio)
+    main(txids=txids, rpc=rpc, testnet=testnet, options=options, max_duration=max_duration, max_txos=max_txos, max_cj_intrafees_ratio=max_cj_intrafees_ratio)
