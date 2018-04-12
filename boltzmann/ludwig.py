@@ -17,9 +17,7 @@ from boltzmann.utils.bci_wrapper import BlockchainInfoWrapper
 
 
 
-
-
-def display_results(mat_lnk, nb_cmbn, inputs, outputs, fees, intrafees):
+def display_results(mat_lnk, nb_cmbn, inputs, outputs, fees, intrafees, efficiency):
     '''
     Displays the results for a given transaction
     Parameters:
@@ -29,6 +27,7 @@ def display_results(mat_lnk, nb_cmbn, inputs, outputs, fees, intrafees):
         outputs   = list of output txos (tuples (address, amount))
         fees      = fees associated to this transaction
         intrafees = max intrafees paid/received by participants (tuple (max intrafees received, max intrafees paid))
+        efficiency= wallet efficiency for this transaction (expressed as a percentage)
     '''
     print('\nInputs = ' + str(inputs))
     print('\nOutputs = ' + str(outputs))
@@ -41,6 +40,9 @@ def display_results(mat_lnk, nb_cmbn, inputs, outputs, fees, intrafees):
     print('\nNb combinations = %i' % nb_cmbn)
     if nb_cmbn > 0:
         print('Tx entropy = %f bits' % math.log2(nb_cmbn))
+    
+    if efficiency is not None and efficiency > 0:
+        print('Wallet efficiency = %f%% (%f bits)' % (efficiency*100, math.log2(efficiency)))
 
     if mat_lnk is None:
         if nb_cmbn == 0:
@@ -96,10 +98,10 @@ def main(txids, rpc, options=['PRECHECK', 'LINKABILITY', 'MERGE_INPUTS'], max_du
             continue
 
         # Computes the entropy of the tx and the linkability of txos
-        (mat_lnk, nb_cmbn, inputs, outputs, fees, intrafees) = process_tx(tx, options, max_duration, max_txos, max_cj_intrafees_ratio)
+        (mat_lnk, nb_cmbn, inputs, outputs, fees, intrafees, efficiency) = process_tx(tx, options, max_duration, max_txos, max_cj_intrafees_ratio)
 
         # Displays the results
-        display_results(mat_lnk, nb_cmbn, inputs, outputs, fees, intrafees)
+        display_results(mat_lnk, nb_cmbn, inputs, outputs, fees, intrafees, efficiency)
 
 
 
@@ -157,3 +159,4 @@ if __name__ == '__main__':
             options = [t.strip() for t in arg.split(',')]
     # Processes computations
     main(txids=txids, rpc=rpc, options=options, max_duration=max_duration, max_txos=max_txos, max_cj_intrafees_ratio=max_cj_intrafees_ratio)
+    
