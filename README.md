@@ -22,6 +22,8 @@ Python 3.3.3
 - sortedcontainers
 - numpy
 - python-bitcoinrpc
+- mpmath
+- sympy
 
 
 ## Installation
