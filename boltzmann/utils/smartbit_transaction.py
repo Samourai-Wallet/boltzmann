@@ -4,6 +4,11 @@ Inspired from https://github.com/blockchain/api-v1-client-python by https://gith
 @author: LaurentMT
 '''
 
+from btcpy.setup import setup
+from btcpy.structs.crypto import PublicKey
+from btcpy.structs.address import P2wpkhAddress
+
+import boltzmann.utils.segwit_addr
 
 class Smartbit_Txo(object):
     '''
@@ -28,6 +33,8 @@ class Smartbit_Txo(object):
         self.address = ''
         self.tx_idx = -1
 
+        setup('testnet')
+
         if txo is not None:
             if 'vout' in txo:
                 self.n = txo['vout']
@@ -42,7 +49,19 @@ class Smartbit_Txo(object):
                     self.address = addresses[0]
                 elif 'type' in txo:
                     if txo['type'] == 'witness_v0_keyhash':
-                        self.address = txo['type']
+                        if 'script_pub_key' in txo:
+                            script_pub_key = txo['script_pub_key']
+                            hex = script_pub_key['hex']
+                            self.address = boltzmann.utils.segwit_addr.encode('tb', 0, bytes.fromhex(hex[4:]))
+                        elif 'witness' in txo:
+                            witness = txo['witness']
+                            if len(witness) >= 1:
+                                pubkey_hex = witness[1];
+                                pubkey = PublicKey.unhexlify(pubkey_hex)
+                                segwit_address = P2wpkhAddress(pubkey.hash(), version=0)
+                                self.address = str(segwit_address)
+                        else:
+                            self.address = txo['type']
             elif 'script_sig' in txo:
                 script_sig = txo['script_sig']
                 self.address = script_sig['hex']
