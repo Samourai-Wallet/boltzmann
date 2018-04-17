@@ -1,5 +1,5 @@
 '''
-Created on 20180411
+Created on 20180416
 @author: TDevD (@SamouraiDev)
 '''
 import json
@@ -9,9 +9,9 @@ from boltzmann.utils.smartbit_transaction import Smartbit_Transaction
 from boltzmann.utils.smartbit_data_wrapper import SmartbitDataWrapper
 
 
-class SmartbitTestNetWrapper(SmartbitDataWrapper):
+class SmartbitWrapper(SmartbitDataWrapper):
     '''
-    A wrapper for smartbits testnet api
+    A wrapper for smartbits api
     '''
 
 
@@ -19,7 +19,7 @@ class SmartbitTestNetWrapper(SmartbitDataWrapper):
     CONSTANTS
     '''
     # API base uri
-    BASE_URI = "https://testnet-api.smartbit.com.au/"
+    BASE_URI = "https://api.smartbit.com.au/"
 
     # Timeout
     TIMEOUT = 10

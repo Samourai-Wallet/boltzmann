@@ -15,6 +15,7 @@ from boltzmann.utils.tx_processor import process_tx
 from boltzmann.utils.bitcoind_rpc_wrapper import BitcoindRPCWrapper
 from boltzmann.utils.bci_wrapper import BlockchainInfoWrapper
 from boltzmann.utils.bci_testnet_wrapper import BlockchainTestNetInfoWrapper
+from boltzmann.utils.smartbit_wrapper import SmartbitWrapper
 from boltzmann.utils.smartbit_testnet_wrapper import SmartbitTestNetWrapper
 
 
@@ -72,8 +73,8 @@ def main(txids, rpc, testnet, smartbit, options=['PRECHECK', 'LINKABILITY', 'MER
     Parameters:
         txids                   = list of transactions txids to be processed
         rpc                     = use bitcoind's RPC interface (or blockchain.info web API)
-        testnet                 = use blockchain.info testnet
-        smartbit                = use smartbit testnet
+        testnet                 = use testnet (blockchain.info by default)
+        smartbit                = use smartbit data provider
         options                 = options to be applied during processing
         max_duration            = max duration allocated to processing of a single tx (in seconds)
         max_txos                = max number of txos. Txs with more than max_txos inputs or outputs are not processed.
@@ -93,8 +94,12 @@ def main(txids, rpc, testnet, smartbit, options=['PRECHECK', 'LINKABILITY', 'MER
             blockchain_provider = BlockchainTestNetInfoWrapper()
             provider_descriptor = 'remote blockchain.info testnet API'
     else:
-        blockchain_provider = BlockchainInfoWrapper()
-        provider_descriptor = 'remote blockchain.info API'
+        if smartbit == True:
+            blockchain_provider = SmartbitWrapper()
+            provider_descriptor = 'remote Smartbit API'
+        else:
+            blockchain_provider = BlockchainInfoWrapper()
+            provider_descriptor = 'remote blockchain.info API'
 
     print("DEBUG: Using %s" % provider_descriptor)
 
@@ -123,8 +128,8 @@ def usage():
     sys.stdout.write('python ludwig.py [--rpc] [--testnet] [--smartbit] [--duration=600] [--maxnbtxos=12] [--cjmaxfeeratio=0] [--options=PRECHECK,LINKABILITY,MERGE_FEES,MERGE_INPUTS,MERGE_OUTPUTS] [--txids=8e56317360a548e8ef28ec475878ef70d1371bee3526c017ac22ad61ae5740b8,812bee538bd24d03af7876a77c989b2c236c063a5803c720769fc55222d36b47,...]');
     sys.stdout.write('\n\n[-t OR --txids] = List of txids to be processed.')
     sys.stdout.write('\n\n[-p OR --rpc] = Use bitcoind\'s RPC interface as source of blockchain data')
-    sys.stdout.write('\n\n[-T OR --testnet] = Use blockchain.info testnet interface as source of blockchain data')
-    sys.stdout.write('\n\n[-s OR --smartbit] = Use Smartbit testnet interface as source of blockchain data')
+    sys.stdout.write('\n\n[-T OR --testnet] = Use testnet interface as source of blockchain data')
+    sys.stdout.write('\n\n[-s OR --smartbit] = Use Smartbit interface as source of blockchain data')
     sys.stdout.write('\n\n[-d OR --duration] = Maximum number of seconds allocated to the processing of a single transaction. Default value is 600')
     sys.stdout.write('\n\n[-x OR --maxnbtxos] = Maximum number of inputs or ouputs. Transactions with more than maxnbtxos inputs or outputs are not processed. Default value is 12.')
     sys.stdout.write('\n\n[-r OR --cjmaxfeeratio] = Max intrafees paid by the taker of a coinjoined transaction. Expressed as a percentage of the coinjoined amount. Default value is 0.')
@@ -165,7 +170,6 @@ if __name__ == '__main__':
         elif opt in ('-T', '--testnet'):
             testnet = True
         elif opt in ('-s', '--smartbit'):
-            testnet = True
             smartbit = True
         elif opt in ('-d', '--duration'):
             max_duration = int(arg)
