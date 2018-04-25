@@ -14,9 +14,7 @@ sys.path.append(os.path.dirname(os.path.realpath(__file__)) + "/../")
 from boltzmann.utils.tx_processor import process_tx
 from boltzmann.utils.bitcoind_rpc_wrapper import BitcoindRPCWrapper
 from boltzmann.utils.bci_wrapper import BlockchainInfoWrapper
-from boltzmann.utils.bci_testnet_wrapper import BlockchainTestNetInfoWrapper
 from boltzmann.utils.smartbit_wrapper import SmartbitWrapper
-from boltzmann.utils.smartbit_testnet_wrapper import SmartbitTestNetWrapper
 
 
 
@@ -86,13 +84,6 @@ def main(txids, rpc, testnet, smartbit, options=['PRECHECK', 'LINKABILITY', 'MER
     if rpc:
         blockchain_provider = BitcoindRPCWrapper()
         provider_descriptor = 'local RPC interface'
-    elif testnet:
-        if smartbit == True:
-            blockchain_provider = SmartbitTestNetWrapper()
-            provider_descriptor = 'remote Smartbit testnet API'
-        else:
-            blockchain_provider = BlockchainTestNetInfoWrapper()
-            provider_descriptor = 'remote blockchain.info testnet API'
     else:
         if smartbit == True:
             blockchain_provider = SmartbitWrapper()
@@ -107,7 +98,7 @@ def main(txids, rpc, testnet, smartbit, options=['PRECHECK', 'LINKABILITY', 'MER
         print('\n\n--- %s -------------------------------------' % txid)
         # Retrieves the tx from local RPC or external data provider
         try:
-            tx = blockchain_provider.get_tx(txid)
+            tx = blockchain_provider.get_tx(txid, not testnet)
             print("DEBUG: Tx fetched: {0}".format(str(tx)))
         except Exception as err:
             print('Unable to retrieve information for %s from %s: %s %s' % (txid, provider_descriptor, err, traceback.format_exc()))

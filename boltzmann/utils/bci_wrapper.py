@@ -19,18 +19,21 @@ class BlockchainInfoWrapper(BlockchainDataWrapper):
     '''
     CONSTANTS
     '''
-    # API base uri
-    BASE_URI = "https://blockchain.info/"
 
     # Timeout
     TIMEOUT = 10
 
 
-    def get_tx(self, txid):
+    def get_tx(self, txid, mainnet):
         response = ''
 
+        if mainnet == True:
+            BASE_URI = "https://blockchain.info/"
+        else:
+            BASE_URI = "https://testnet.blockchain.info/"
+
         try:
-            uri = self.BASE_URI + 'rawtx/' + txid
+            uri = BASE_URI + 'rawtx/' + txid
             response = urlopen(uri, None, timeout=self.TIMEOUT).read().decode('utf-8')
         except HTTPError as e:
             raise Exception(e.read(), e.code)
