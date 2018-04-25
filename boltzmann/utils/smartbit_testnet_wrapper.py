@@ -35,4 +35,4 @@ class SmartbitTestNetWrapper(SmartbitDataWrapper):
             raise Exception(e.read(), e.code)
 
         json_response = json.loads(response)
-        return Smartbit_Transaction(json_response)
+        return Smartbit_Transaction(json_response, False)

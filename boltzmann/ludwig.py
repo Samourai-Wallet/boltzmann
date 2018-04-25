@@ -105,7 +105,7 @@ def main(txids, rpc, testnet, smartbit, options=['PRECHECK', 'LINKABILITY', 'MER
 
     for txid in txids:
         print('\n\n--- %s -------------------------------------' % txid)
-        # Retrieves the tx from local RPC or bci
+        # Retrieves the tx from local RPC or external data provider
         try:
             tx = blockchain_provider.get_tx(txid)
             print("DEBUG: Tx fetched: {0}".format(str(tx)))
