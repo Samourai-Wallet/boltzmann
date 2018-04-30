@@ -31,7 +31,7 @@ Python 3.3.3
 
 Manual installation
 ```
-Gets the library from Github : https://github.com/LaurentMT/boltzmann/archive/master.zip
+Gets the library from Github : https://github.com/Samourai-Wallet/boltzmann/archive/master.zip
 Unzips the archive in a temp directory
 python setup.py install
 ```
@@ -46,9 +46,9 @@ python ludwig.py [--rpc] [--duration=600] [--maxnbtxos=12] [--cjmaxfeeratio=0] [
 
 [-p OR --rpc] = Use bitcoind's RPC interface as source of blockchain data
 
-[-T OR --testnet] = Use blockchain.info testnet3 as source of blockchain data
+[-T OR --testnet] = Use testnet3 as source of blockchain data
 
-[-s OR --smartbit] = Use Smartbit testnet3 as source of blockchain data
+[-s OR --smartbit] = Use Smartbit as source of blockchain data
 
 [-d OR --duration] = Maximum number of seconds allocated to the processing of a single transaction.
                      Default value is 600 seconds.
@@ -107,11 +107,13 @@ txindex=1
 @kristovatlas
 @SamouraiDev
 
+Uses Chainside's [btcpy](https://github.com/chainside/btcpy) library and [Sipa's](https://github.com/sipa/bech32/tree/master/ref/python) bech32 reference code for deriving bech32 addresses from public keys (btcpy) and redeem scripts/witness programs (Sipa).
+
 ## Contributing
 
 Many improvements are needed:
  - smarter heuristics to manage intra fees paid/received by participants to coinjoin markets (e.g. joinmarket, ...)
- - optimization of the algorithm (parallelization, memoization, ...)
+ - optimization of the algorithm (parallelization, memorization, ...)
  - ...
 
 Help us to make Boltzmann better !
