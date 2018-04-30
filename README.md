@@ -31,7 +31,7 @@ Python 3.3.3
 
 Manual installation
 ```
-Gets the library from Github : https://github.com/LaurentMT/boltzmann/archive/master.zip
+Gets the library from Github : https://github.com/Samourai-Wallet/boltzmann/archive/master.zip
 Unzips the archive in a temp directory
 python setup.py install
 ```
