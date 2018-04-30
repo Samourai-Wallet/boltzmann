@@ -4,6 +4,11 @@ Inspired from https://github.com/blockchain/api-v1-client-python by https://gith
 @author: LaurentMT
 '''
 
+from btcpy.setup import setup
+from btcpy.structs.crypto import PublicKey
+from btcpy.structs.address import P2wpkhAddress
+
+import boltzmann.utils.segwit_addr
 
 class Smartbit_Txo(object):
     '''
@@ -22,11 +27,17 @@ class Smartbit_Txo(object):
         only contain the 'sequence' and 'script'/'coinbase' fields.
     '''
 
-    def __init__(self, txo):
+    def __init__(self, txo, mainnet):
         self.n = -1
         self.value = -1
         self.address = ''
         self.tx_idx = -1
+        self.isMainNet = mainnet
+
+        if self.isMainNet == True:
+            setup('mainnet')
+        else:
+            setup('testnet')
 
         if txo is not None:
             if 'vout' in txo:
@@ -42,7 +53,24 @@ class Smartbit_Txo(object):
                     self.address = addresses[0]
                 elif 'type' in txo:
                     if txo['type'] == 'witness_v0_keyhash':
-                        self.address = txo['type']
+                        if 'script_pub_key' in txo:
+                            script_pub_key = txo['script_pub_key']
+                            hex = script_pub_key['hex']
+                            if self.isMainNet == True:
+                                self.address = boltzmann.utils.segwit_addr.encode('bc', 0, bytes.fromhex(hex[4:]))
+                            else:
+                                self.address = boltzmann.utils.segwit_addr.encode('tb', 0, bytes.fromhex(hex[4:]))
+                        elif 'witness' in txo:
+                            witness = txo['witness']
+                            if len(witness) >= 1:
+                                pubkey_hex = witness[1];
+                                pubkey = PublicKey.unhexlify(pubkey_hex)
+                                segwit_address = P2wpkhAddress(pubkey.hash(), version=0)
+                                self.address = str(segwit_address)
+                            else:
+                                self.address = txo['type']
+                        else:
+                            self.address = txo['type']
             elif 'script_sig' in txo:
                 script_sig = txo['script_sig']
                 self.address = script_sig['hex']
@@ -77,15 +105,15 @@ class Smartbit_Transaction(object):
         outputs (List[`transaction.Txo`])
     '''
 
-    def __init__(self, _tx):
+    def __init__(self, _tx, _mainnet):
 
         tx = _tx.get('transaction')
         height = tx.get('block')
         self.height = -1 if (height is None) else height
         self.time = tx['time']
         self.txid = tx['txid']
-        self.inputs = [Smartbit_Txo(txo_in) for txo_in in tx['inputs']]
-        self.outputs = [Smartbit_Txo(txo_out) for txo_out in tx['outputs']]
+        self.inputs = [Smartbit_Txo(txo_in, _mainnet) for txo_in in tx['inputs']]
+        self.outputs = [Smartbit_Txo(txo_out, _mainnet) for txo_out in tx['outputs']]
 
     def __str__(self):
         return "{{ 'height': {0}, 'time':{1}, 'txid':{2}, 'inputs':{3}, 'outputs':{4} }}".format(
