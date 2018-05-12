@@ -99,7 +99,10 @@ def main(txids, rpc, testnet, smartbit, options=['PRECHECK', 'LINKABILITY', 'MER
         print('\n\n--- %s -------------------------------------' % txid)
         # retrieves the tx from local RPC or external data provider
         try:
-            tx = blockchain_provider.get_tx(txid, *testnet)
+            if rpc:
+                tx = blockchain_provider.get_tx(txid)
+            else:
+                tx = blockchain_provider.get_tx(txid, testnet)
             print("DEBUG: Tx fetched: {0}".format(str(tx)))
         except Exception as err:
             print('Unable to retrieve information for %s from %s: %s %s' % (txid, provider_descriptor, err, traceback.format_exc()))

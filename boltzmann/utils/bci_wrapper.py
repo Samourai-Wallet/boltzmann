@@ -24,13 +24,13 @@ class BlockchainInfoWrapper(BlockchainDataWrapper):
     TIMEOUT = 10
 
 
-    def get_tx(self, txid, testnet):
+    def get_tx(self, txid, mainnet):
         response = ''
 
-        if testnet == True:
-            BASE_URI = "https://testnet.blockchain.info/"
-        else:
+        if mainnet == True:
             BASE_URI = "https://blockchain.info/"
+        else:
+            BASE_URI = "https://testnet.blockchain.info/"
 
         try:
             uri = BASE_URI + 'rawtx/' + txid
