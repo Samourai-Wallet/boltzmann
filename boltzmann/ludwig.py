@@ -84,7 +84,6 @@ def main(txids, rpc, testnet, smartbit, options=['PRECHECK', 'LINKABILITY', 'MER
     if rpc:
         blockchain_provider = BitcoindRPCWrapper()
         provider_descriptor = 'local RPC interface'
-        testnet = ()
     else:
         if smartbit == True:
             blockchain_provider = SmartbitWrapper()
