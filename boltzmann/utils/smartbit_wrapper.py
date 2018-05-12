@@ -22,13 +22,13 @@ class SmartbitWrapper(SmartbitDataWrapper):
     TIMEOUT = 10
 
 
-    def get_tx(self, txid, mainnet):
+    def get_tx(self, txid, testnet):
         response = ''
 
-        if mainnet == True:
-            BASE_URI = "https://api.smartbit.com.au/"
-        else:
+        if testnet == True:
             BASE_URI = "https://testnet-api.smartbit.com.au/"
+        else:
+            BASE_URI = "https://api.smartbit.com.au/"
 
         try:
             uri = BASE_URI + 'v1/blockchain/tx/' + txid
