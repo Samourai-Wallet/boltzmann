@@ -211,7 +211,7 @@ class BitcoindRPCWrapper(BlockchainDataWrapper):
         return bci_input
 
 
-    def get_tx(self, txid):
+    def get_tx(self, txid, testnet):
         """Get the `Transaction` object for specified hash.
 
         The `Transaction` constructors expects these fields for a dict:
