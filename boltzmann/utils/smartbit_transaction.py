@@ -6,9 +6,10 @@ Inspired from https://github.com/blockchain/api-v1-client-python by https://gith
 
 from btcpy.setup import setup
 from btcpy.structs.crypto import PublicKey
-from btcpy.structs.address import P2wpkhAddress
-
+from btcpy.structs.address import P2wpkhAddress, P2wshAddress
+from btcpy.structs.script import ScriptPubKey
 import boltzmann.utils.segwit_addr
+
 
 class Smartbit_Txo(object):
     '''
@@ -40,21 +41,25 @@ class Smartbit_Txo(object):
             setup('testnet')
 
         if txo is not None:
+
             if 'vout' in txo:
                 self.n = txo['vout']
             elif 'n' in txo:
                 self.n = txo['n']
+
             if 'value_int' in txo:
                 self.value = txo['value_int']
+
             # Gets the address or the scriptpubkey (if an address isn't associated to the txo)
             if 'addresses' in txo:
                 addresses = txo['addresses']
                 if len(addresses) > 0:
                     self.address = addresses[0]
                 elif 'type' in txo:
-                    if txo['type'] == 'witness_v0_keyhash':
+                    if txo['type'] in ['witness_v0_keyhash', 'witness_v0_scripthash']:
                         if 'script_pub_key' in txo:
                             script_pub_key = txo['script_pub_key']
+                            print(script_pub_key)
                             hex = script_pub_key['hex']
                             if self.isMainNet == True:
                                 self.address = boltzmann.utils.segwit_addr.encode('bc', 0, bytes.fromhex(hex[4:]))
@@ -63,10 +68,16 @@ class Smartbit_Txo(object):
                         elif 'witness' in txo:
                             witness = txo['witness']
                             if len(witness) >= 1:
-                                pubkey_hex = witness[1];
-                                pubkey = PublicKey.unhexlify(pubkey_hex)
-                                segwit_address = P2wpkhAddress(pubkey.hash(), version=0)
-                                self.address = str(segwit_address)
+                                if txo['type'] == 'witness_v0_keyhash':
+                                    pubkey_hex = witness[1]
+                                    pubkey = PublicKey.unhexlify(pubkey_hex)
+                                    segwit_address = P2wpkhAddress(pubkey.hash(), version=0)
+                                    self.address = str(segwit_address)
+                                elif txo['type'] == 'witness_v0_scripthash':
+                                    witness_script_hex = witness[-1]
+                                    scriptpubkey = ScriptPubKey.unhexlify(witness_script_hex)
+                                    segwit_address = P2wshAddress(scriptpubkey.p2wsh_hash(), version=0)
+                                    self.address = str(segwit_address)
                             else:
                                 self.address = txo['type']
                         else:
