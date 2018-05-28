@@ -24,6 +24,7 @@ Python 3.3.3
 - python-bitcoinrpc
 - mpmath
 - sympy
+- chainside-btcpy (>=0.5.1)
 
 
 ## Installation

@@ -30,6 +30,7 @@ setup(
         'sortedcontainers',
         'python-bitcoinrpc',
         'mpmath',
-        'sympy'
+        'sympy',
+        'chainside-btcpy >= 0.5.1'
     ]
 )

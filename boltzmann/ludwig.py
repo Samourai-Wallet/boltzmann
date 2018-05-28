@@ -174,3 +174,4 @@ if __name__ == '__main__':
             options = [t.strip() for t in arg.split(',')]
     # Processes computations
     main(txids=txids, rpc=rpc, testnet=testnet, smartbit=smartbit, options=options, max_duration=max_duration, max_txos=max_txos, max_cj_intrafees_ratio=max_cj_intrafees_ratio)
+    

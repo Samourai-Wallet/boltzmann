@@ -213,7 +213,10 @@ class BitcoindRPCWrapper(BlockchainDataWrapper):
 
     def get_tx(self, txid, testnet):
         """Get the `Transaction` object for specified hash.
-
+        
+        Testnet parameter isn't used.
+        For now, we assume that a single bitcoind is running on the machine. 
+        
         The `Transaction` constructors expects these fields for a dict:
             * 'block_height' (int)
             * 'time' (None)
