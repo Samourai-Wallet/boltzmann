@@ -56,11 +56,20 @@ def display_results(mat_lnk, nb_cmbn, inputs, outputs, fees, intrafees, efficien
             print('\nLinkability Matrix (#combinations with link) :')
             print(mat_lnk)
 
+        dlCount = 0
         print('\nDeterministic links :')
         for i in range(0, len(outputs)):
             for j in range(0, len(inputs)):
                 if (mat_lnk[i,j] == nb_cmbn) and mat_lnk[i,j] != 0 :
                     print('%s & %s are deterministically linked' % (inputs[j], outputs[i]))
+                    dlCount += 1
+
+# deterministic link ratio:
+        nbLinks = len(outputs) * len(inputs)
+        ratioDL = dlCount / nbLinks
+#        nRatioDL = 1.0 - ratioDL
+        print('\nDeterministic link ratio = %f%%' % (ratioDL * 100))
+
 
 
 
