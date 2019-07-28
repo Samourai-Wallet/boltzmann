@@ -81,6 +81,12 @@ python ludwig.py [--rpc] [--duration=600] [--maxnbtxos=12] [--cjmaxfeeratio=0] [
 
 This project requires python 3. If your default `python` points to python 2, substitute `python3` for all instructions in this README.
 
+MERGE_OUTPUTS option is still a work in progress. Results are not always reliable.
+
+MERGE_FEES should only be used if it is known with certainty that all mining fees were paid by a single partificant to the transaction. Not recommended to use, especillay in the case of Stonewall/Stonewallx2 transactions.
+
+If your request is returning no response and you only see "DEBUG: Using remote blockchain.info API" make sure you are typing the commands correctly. 
+
 ## Data Sources
 
 You can use the remote Blockchain.info API for blockchain data (default), bitcoind's local RPC interface using the `--rpc` command line option, or write your own wrapper.
