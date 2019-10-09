@@ -45,6 +45,9 @@ def display_results(mat_lnk, nb_cmbn, inputs, outputs, fees, intrafees, efficien
     if efficiency is not None and efficiency > 0:
         print('Wallet efficiency = %f%% (%f bits)' % (efficiency*100, math.log2(efficiency)))
 
+    if nb_cmbn > 0:
+        print('Entropy density = %f%%' % (math.log2(nb_cmbn) / (len(inputs) + len(outputs))))
+
     if mat_lnk is None:
         if nb_cmbn == 0:
             print('\nSkipped processing of this transaction (too many inputs and/or outputs)')
