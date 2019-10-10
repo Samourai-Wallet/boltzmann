@@ -45,6 +45,9 @@ def display_results(mat_lnk, nb_cmbn, inputs, outputs, fees, intrafees, efficien
     if efficiency is not None and efficiency > 0:
         print('Wallet efficiency = %f%% (%f bits)' % (efficiency*100, math.log2(efficiency)))
 
+    if nb_cmbn > 0:
+        print('Entropy density = %f%%' % (math.log2(nb_cmbn) / (len(inputs) + len(outputs))))
+
     if mat_lnk is None:
         if nb_cmbn == 0:
             print('\nSkipped processing of this transaction (too many inputs and/or outputs)')
@@ -56,11 +59,20 @@ def display_results(mat_lnk, nb_cmbn, inputs, outputs, fees, intrafees, efficien
             print('\nLinkability Matrix (#combinations with link) :')
             print(mat_lnk)
 
+        dlCount = 0
         print('\nDeterministic links :')
         for i in range(0, len(outputs)):
             for j in range(0, len(inputs)):
                 if (mat_lnk[i,j] == nb_cmbn) and mat_lnk[i,j] != 0 :
                     print('%s & %s are deterministically linked' % (inputs[j], outputs[i]))
+                    dlCount += 1
+
+# deterministic link ratio:
+        nbLinks = len(outputs) * len(inputs)
+        ratioDL = dlCount / nbLinks
+#        nRatioDL = 1.0 - ratioDL
+        print('\nDeterministic link ratio = %f%%' % (ratioDL * 100))
+
 
 
 
