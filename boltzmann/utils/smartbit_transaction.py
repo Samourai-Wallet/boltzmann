@@ -42,9 +42,7 @@ class Smartbit_Txo(object):
 
         if txo is not None:
 
-            if 'vout' in txo:
-                self.n = txo['vout']
-            elif 'n' in txo:
+            if 'n' in txo:
                 self.n = txo['n']
 
             if 'value_int' in txo:
