@@ -1,5 +1,7 @@
 # Boltzmann
 
+# This repository is now maintained at https://code.samourai.io/wallet/boltzmann 
+
 A python script computing the entropy of Bitcoin transactions and the linkability of their inputs and outputs.
 
 For a description of the metrics :
